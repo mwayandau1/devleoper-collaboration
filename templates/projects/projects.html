@@ -9,6 +9,7 @@
        
     <!-- Main Section -->
   <main class="projects">
+    
     <section class="hero-section text-center">
       <div class="container container--narrow">
         <div class="hero-section__box">
@@ -16,10 +17,11 @@
         </div>
 
         <div class="hero-section__search">
-          <form class="form" action="#" method="get">
+          
+          <form id="searchForm" class="form" action="{% url 'projects' %}" method="get">
             <div class="form__field">
               <label for="formInput#search">Search By Projects </label>
-              <input class="input input--text" id="formInput#search" type="text" name="text"
+              <input class="input input--text" id="formInput#search" value="{{search_query}}" type="text" name="search_query"
                 placeholder="Search by Project Title" />
             </div>
 
@@ -29,8 +31,9 @@
       </div>
     </section>
     <!-- Search Result: DevList -->
-   
+    
     <section class="projectsList">
+      {{project_count}}
       <div class="container">
             <div class="grid grid--three">
                 {% for project in projects %}
@@ -69,7 +72,7 @@
        
       </div>
     </section>
-
+   {% include 'includes/pagination.html'  with queryset=projects custom_pag=custom_pag%}
     
   </main>
  
@@ -79,3 +82,4 @@
     
     
 {% endblock %}
+

@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import UserCustomForm, ProfileForm, SkillsForm
-from .models import Profile
+from .models import Profile, Skills
+from .utils import searchProfile 
 from django.contrib import messages
-from .models import User
 from django.http import HttpResponse
+from django.db.models.query import Q
+from .utils import paginateProfiles
 
 def registerUser(request):
     form = UserCustomForm()
@@ -50,10 +52,15 @@ def logoutUser(request):
 
 
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = {'profiles':profiles}
+    profiles, search_query = searchProfile(request)
+    results = 6
+    profiles, custom_page = paginateProfiles(request, profiles, results)
+    
+    context = {'profiles': profiles, 
+               'search_query':search_query,
+               'custom_page':custom_page,
+               }
     return render(request, 'users/profiles.html', context)
-
 
 def userProfile(request, pk):
     try:
@@ -138,4 +145,4 @@ def deleteSkill(request, pk):
         messages.success(request, "Skill deleted successfully")
         return redirect('account')
     context = {'object' : skill}
-    return render(request, 'delete_template.html')
+    return render(request, 'delete_template.html', context)

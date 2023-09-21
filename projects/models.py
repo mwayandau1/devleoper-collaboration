@@ -28,6 +28,7 @@ class Projects(models.Model):
     class Meta:
         verbose_name = 'projects'
         verbose_name_plural = 'projects'
+        ordering = ['-created']
         
 
     def __str__(self) -> str:

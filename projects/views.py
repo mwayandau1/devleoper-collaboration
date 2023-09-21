@@ -1,16 +1,24 @@
 from django.shortcuts import render, redirect
-from .models import Projects
+from .models import Projects, Tag
 from .forms import ProjectsForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .utils import searchProject, paginateProjects
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 
 
 def projects(request):
-    projects = Projects.objects.all()
-
+    
+    projects, search_query = searchProject(request) 
+    results = 6
+    projects, custom_pag = paginateProjects(request, projects, results)
+    
     context = {
-        'projects':projects
+        'projects':projects,
+        'search_query':search_query,
+        'custom_pag':custom_pag,
     }
     return render(request, 'projects/projects.html',context)
 
