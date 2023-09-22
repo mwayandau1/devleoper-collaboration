@@ -16,7 +16,7 @@ def registerUser(request):
         form = UserCustomForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            username = user.username.lower()
+            user.username = user.username.lower()
             user.save()
             messages.success(request, "Your account have created successfully!")
             login(request, user)
@@ -39,7 +39,7 @@ def loginUser(request):
 
         if user is not None:
             login(request, user)
-            return redirect('profiles')
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
             messages.error(request, "Username or password is incorrect")
     return render(request, 'users/login_register.html', context)
