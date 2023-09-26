@@ -13,11 +13,11 @@ class Tag(models.Model):
 
 
 class Projects(models.Model):
-    owner = models.ForeignKey(Profile, blank=True, null=True, on_delete=models.SET_NULL)
+    owner = models.ForeignKey(Profile, blank=True, null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-    demo_link = models.CharField(max_length=200, blank=True, null=True)
-    source_link = models.CharField(max_length=200, blank=True, null=True)
+    demo_link = models.URLField(max_length=200, blank=True, null=True)
+    source_link = models.URLField(max_length=200, blank=True, null=True)
     featured_image = models.ImageField(blank=True, null=True, default='images/logo.svg')
     tags = models.ManyToManyField(Tag, blank=True)
     total_vote = models.IntegerField(default=0, blank=True, null=True)
@@ -33,6 +33,14 @@ class Projects(models.Model):
 
     def __str__(self) -> str:
         return self.title
+    
+    def getImageUrl(self):
+        try:
+            url = self.featured_image.url
+        except:
+            url = ''
+        return url
+    
     
 
     def reviewers(self):

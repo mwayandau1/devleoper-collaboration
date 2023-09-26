@@ -1,4 +1,3 @@
-<script type="text/javascript">
     let searchForm = document.getElementById('searchForm');
     let pageLinks = document.getElementsByClassName('page-link')
   
@@ -16,4 +15,4 @@
         })
       }
     }
-  </script>
+

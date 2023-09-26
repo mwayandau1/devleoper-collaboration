@@ -18,7 +18,7 @@ def registerUser(request):
             user = form.save(commit=False)
             user.username = user.username.lower()
             user.save()
-            messages.success(request, "Your account have created successfully!")
+            messages.success(request, "Your account have been  created successfully!")
             login(request, user)
             return redirect('edit-account')
         else:
@@ -78,7 +78,6 @@ def userProfile(request, pk):
     }
     return render(request, 'users/user-profile.html', context)
 
-login_required(login_url='login')
 
 login_required(login_url='login')
 def userAccount(request):

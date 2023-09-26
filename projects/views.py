@@ -50,12 +50,17 @@ def create_project(request):
 
     form = ProjectsForm()
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', " ").split()
         form = ProjectsForm(request.POST, request.FILES)
         if form.is_valid():
             projects = form.save(commit=False)
             projects.owner = profile
             projects.save()
-            form.save()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                projects.tags.add(tag)
+                projects.save()
+            
             messages.success(request,  "Project created successfuly!")
             return redirect('account')
     else:
@@ -71,13 +76,18 @@ def updateProject(request, pk):
     profile = request.user.profile
     project = profile.projects_set.get(id=pk)
     form = ProjectsForm(instance=project)
-    if request.method == 'POST':
+    if request.method == 'POST':       
+        newtags = request.POST.get('newtags').replace(',', " ").split()
         form = ProjectsForm(request.POST,request.FILES, instance=project)
         if form.is_valid():
-            form.save()
+            project =form.save()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                project.tags.add(tag)
+                project.save()
             messages.success(request, "Project updated successfuly!")
             return redirect('account')
-    context ={'form':form}
+    context ={'form':form, 'project':project}
     return render(request, 'projects/project_form.html', context)
 
 
@@ -91,7 +101,7 @@ def deleteProject(request, id):
     if request.method == 'POST':
         project.delete()
         messages.success(request, "Project deleted successfuly!")
-        return redirect('projects')
+        return redirect('account')
             
     context = { 'object': project}
     return render(request, 'delete_template.html', context)

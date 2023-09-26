@@ -19,10 +19,19 @@ class Profile(models.Model):
     social_website = models.CharField(max_length=200, null=True, blank=True)
     created  = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-
+    class Meta:
+        ordering = ['-created']
 
     def __str__(self):
         return str(self.username)
+    
+    
+    def getImageUrl(self):
+        try:
+            url = self.profile_image.url
+        except:
+            url = ''
+        return url
     
 
 
